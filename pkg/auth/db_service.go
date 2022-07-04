@@ -954,7 +954,7 @@ func exportUsers(ctx context.Context, d *pgxpool.Pool, je *json.Encoder) (UserID
 
 		if err = je.Encode(kv.Entry{
 			PartitionKey: []byte(model.PartitionKey),
-			Key:          []byte(key),
+			Key:          key,
 			Value:        value,
 		}); err != nil {
 			return nil, err
@@ -986,7 +986,7 @@ func exportGroups(ctx context.Context, d *pgxpool.Pool, je *json.Encoder) (IDToN
 		}
 		if err = je.Encode(kv.Entry{
 			PartitionKey: []byte(model.PartitionKey),
-			Key:          []byte(key),
+			Key:          key,
 			Value:        value,
 		}); err != nil {
 			return nil, err
@@ -1017,7 +1017,7 @@ func exportPolicies(ctx context.Context, d *pgxpool.Pool, je *json.Encoder) (IDT
 		}
 		if err = je.Encode(kv.Entry{
 			PartitionKey: []byte(model.PartitionKey),
-			Key:          []byte(key),
+			Key:          key,
 			Value:        value,
 		}); err != nil {
 			return nil, err
@@ -1053,14 +1053,14 @@ func exportUserGroups(ctx context.Context, d *pgxpool.Pool, je *json.Encoder, us
 			return fmt.Errorf("group ID %d: %w", ug.GroupID, ErrExportedEntNotFound)
 		}
 		key := model.GroupUserPath(groupName, username)
-		secIndex := kv.SecondaryIndex{PrimaryKey: []byte(model.UserPath(username))}
+		secIndex := kv.SecondaryIndex{PrimaryKey: model.UserPath(username)}
 		value, err := proto.Marshal(&secIndex)
 		if err != nil {
 			return err
 		}
 		if err = je.Encode(kv.Entry{
 			PartitionKey: []byte(model.PartitionKey),
-			Key:          []byte(key),
+			Key:          key,
 			Value:        value,
 		}); err != nil {
 			return err
@@ -1095,14 +1095,14 @@ func exportUserPolicies(ctx context.Context, d *pgxpool.Pool, je *json.Encoder, 
 			return fmt.Errorf("user ID %d: %w", up.UserID, ErrExportedEntNotFound)
 		}
 		key := model.UserPolicyPath(username, policyName)
-		secIndex := kv.SecondaryIndex{PrimaryKey: []byte(model.PolicyPath(policyName))}
+		secIndex := kv.SecondaryIndex{PrimaryKey: model.PolicyPath(policyName)}
 		value, err := proto.Marshal(&secIndex)
 		if err != nil {
 			return err
 		}
 		if err = je.Encode(kv.Entry{
 			PartitionKey: []byte(model.PartitionKey),
-			Key:          []byte(key),
+			Key:          key,
 			Value:        value,
 		}); err != nil {
 			return err
@@ -1137,14 +1137,14 @@ func exportGroupPolicies(ctx context.Context, d *pgxpool.Pool, je *json.Encoder,
 			return fmt.Errorf("group ID %d: %w", gp.GroupID, ErrExportedEntNotFound)
 		}
 		key := model.GroupPolicyPath(groupName, policyName)
-		secIndex := kv.SecondaryIndex{PrimaryKey: []byte(model.PolicyPath(policyName))}
+		secIndex := kv.SecondaryIndex{PrimaryKey: model.PolicyPath(policyName)}
 		value, err := proto.Marshal(&secIndex)
 		if err != nil {
 			return err
 		}
 		if err = je.Encode(kv.Entry{
 			PartitionKey: []byte(model.PartitionKey),
-			Key:          []byte(key),
+			Key:          key,
 			Value:        value,
 		}); err != nil {
 			return err
@@ -1181,7 +1181,7 @@ func exportCredentials(ctx context.Context, d *pgxpool.Pool, je *json.Encoder, u
 		}
 		if err = je.Encode(kv.Entry{
 			PartitionKey: []byte(model.PartitionKey),
-			Key:          []byte(key),
+			Key:          key,
 			Value:        value,
 		}); err != nil {
 			return err
@@ -1218,7 +1218,7 @@ func exportExpiredTokens(ctx context.Context, d *pgxpool.Pool, je *json.Encoder)
 		}
 		if err = je.Encode(kv.Entry{
 			PartitionKey: []byte(model.PartitionKey),
-			Key:          []byte(key),
+			Key:          key,
 			Value:        value,
 		}); err != nil {
 			return err
